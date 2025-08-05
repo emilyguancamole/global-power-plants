@@ -3,11 +3,15 @@ import dotenv from 'dotenv';
 import plantsRouter from './routes/plants';
 import countriesRouter from './routes/countries';
 import testRouter from './routes/test';
+import { apiKeyAuth } from './middleware/api-key-auth';
+
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+
+app.use(apiKeyAuth); // apply auth to all routes
 
 // Route mounting
 app.use('/test', testRouter);
