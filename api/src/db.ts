@@ -1,0 +1,15 @@
+import { Pool } from 'pg'; // connection pool so multiple API requests don’t create new DB connections
+import dotenv from 'dotenv';
+dotenv.config();
+
+
+// Database connection pool
+const db = new Pool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  database: process.env.DB_NAME,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+});
+
+export default db;
