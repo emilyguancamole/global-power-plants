@@ -22,13 +22,14 @@ router.get('/fuel-share', async (req, res) => {
     try{
         const result = await db.query(
             `SELECT primary_fuel,
-                SUM(capacity_mw)
+                SUM(capacity_mw) AS tot_capacity
             FROM power_plants
-            GROUP BY primary_fuel`,
+            GROUP BY primary_fuel
+            ORDER BY tot_capacity DESC;`
         )
         res.json(result.rows)
     } catch (err) {
-        console.error(err);
+        console.error('Database error:', err);
         res.status(500).json({ error: 'Error getting pie chart data' });
     }
 });

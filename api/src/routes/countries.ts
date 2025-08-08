@@ -24,7 +24,7 @@ router.get('/top25', async (req, res) => {
     }
 });
 
-// Country Electricity Generation Over Time: annual elec gen for selected countries, up to 2
+// Country Electricity Generation Over Time: annual elec gen for the selected country code
 router.get('/:code/generation', async (req, res) => {
     const { code } = req.params;
     try {
@@ -45,5 +45,20 @@ router.get('/:code/generation', async (req, res) => {
         res.status(500).json({ error: 'Error getting generation data for country' });
     }
 })
+
+
+// todoUpdate feature: edit country's capacity_mw
+// router.put('/:code/generation', async (req, res) => {
+//     const { code } = req.params;
+//     try {
+//         const result = req.params.code;
+//         const updatedData = req.body;
+
+//         const county = await 
+//     }
+// })
+
+// todoUpdate feature: edit county's generation_gwh_{year}
+
 
 export default router;
