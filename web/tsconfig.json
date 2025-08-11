@@ -4,11 +4,17 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  // "compilerOptions": {
-  //   /* Path aliases */
-  //   "baseUrl": ".",
-  //   "paths": {
-  //     "@/*": ["./src/*"]
-  //   }
-  // }
+  "compilerOptions": {
+    "typeRoots": ["node_modules/@types"],
+    "moduleResolution": "node", 
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    
+    
+  }
 }
+/* Path aliases */
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // }

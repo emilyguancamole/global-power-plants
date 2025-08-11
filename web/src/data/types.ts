@@ -6,3 +6,9 @@ export interface PlantType {
   longitude: number;
   primary_fuel: string;
 }
+
+export interface CountryCapacityType {
+  country_code: string;
+  country_name: string;
+  tot_capacity: number;
+}

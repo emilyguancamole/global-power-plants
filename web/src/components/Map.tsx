@@ -5,12 +5,12 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import type { PlantType } from "../data/types";
 
 const FUEL_COLORS: Record<string, string> = {
-  Solar: "orange",
-  Wind: "lightblue",
-  Hydro: "blue",
-  Gas: "gray",
-  Oil: "black",
-  Coal: "brown",
+  Solar: "#f5da2a",
+  Wind: "#697cd4ff",
+  Hydro: "#088bb3ff",
+  Gas: "lightgreen",
+  Oil: "brown",
+  Coal: "black",
   Nuclear: "pink",
   Biomass: "green",
   Other: "purple",
@@ -18,18 +18,22 @@ const FUEL_COLORS: Record<string, string> = {
 
 const Map = () => {
   const [plants, setPlants] = useState<PlantType[]>([]);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
-    fetchPlants()
-      .then((data: PlantType[] | undefined) => {
-        if (Array.isArray(data)) {
-          setPlants(data);
-        } else {
-          setPlants([]);
-          console.error("Fetched data is not an array:", data);
-        }
-      })
-      .catch((error) => console.error("Error fetching plants:", error));
+    fetchPlants().then((data: PlantType[]) => {
+      setPlants(data);
+      //? render in batches to avoid performance issues with large datasets
+      // let batchSize = 1000;
+      // let index = 0;
+      // const addBatch = () => {
+      //   setPlants(prev => [...prev, ...data.slice(index, index + batchSize)]);
+      //   index += batchSize;
+      //   if (index < data.length) setTimeout(addBatch, 50); // next batch after 100ms
+      // };
+      // addBatch();
+    })
+    .catch((error) => console.error("Error fetching plants:", error));
   }, []);
 
   return (
@@ -37,26 +41,24 @@ const Map = () => {
       center={[20, 0]}
       zoom={2}
       style={{ height: "600px", width: "100%" }}
+      preferCanvas={true} // faster than svg
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      {plants.map((plant) => (
-        // <MarkerClusterGroup -- didn't work fo rmaking it faster
-        <CircleMarker
-          key={plant.gppd_idnr}
-          center={[plant.latitude, plant.longitude]}
-          radius={Math.max(2, Math.sqrt(plant.capacity_mw/500))} // scale size
-          pathOptions={{
-            color: FUEL_COLORS[plant.primary_fuel] || "gray",
-            fillOpacity: 0.7,
-          }}
-        >
-          <Tooltip direction="top" offset={[0, -5]} opacity={1}>
-            <span>
-              {plant.name} - {plant.primary_fuel} - {plant.capacity_mw} MW
-            </span>
-          </Tooltip>
-        </CircleMarker>
-      ))}
+      {/* <MarkerClusterGroup chunkedLoading> */}
+        {plants.map((plant) => (
+          <CircleMarker
+            key={plant.gppd_idnr}
+            center={[plant.latitude, plant.longitude]}
+            radius={plant.capacity_mw > 1000 ? 3 : 2} //? scale size
+            pathOptions={{
+              color: FUEL_COLORS[plant.primary_fuel] || "gray",
+              fillOpacity: 0.7,
+            }} 
+          >
+          </CircleMarker>
+        ))}
+      {/* </MarkerClusterGroup> */}
+      
     </MapContainer>
   );
 };

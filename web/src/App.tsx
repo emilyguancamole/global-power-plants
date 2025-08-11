@@ -1,11 +1,8 @@
 import "./App.css";
-
 import React from "react";
 import { Container, Typography, Tabs, Tab, Box } from "@mui/material";
 import Map from "./components/Map";
-// import CountryTable from './components/CountryTable';
-// import GenerationChart from './components/GenerationChart';
-// import FuelPieChart from './components/FuelPieChart';
+import CountryTable from './components/CountryTable';
 
 function App() {
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -27,11 +24,22 @@ function App() {
         <Tab label="Fuel Pie Chart" />
       </Tabs>
       <Box mt={4}>
-        {tabIndex === 0 && <Map />}
-        {tabIndex === 1 && <Map />}
-        {/* {tabIndex === 1 && <CountryTable />}
-        {tabIndex === 2 && <GenerationChart />}
-        {tabIndex === 3 && <FuelPieChart />} */}
+        {tabIndex === 0 && (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Power Plant Map
+            </Typography>
+            <Map />
+            <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
+              Top 25 Countries by Capacity
+            </Typography>
+            <CountryTable />
+          </Box>
+        )}
+        {tabIndex === 1 && <Map/>}
+        {tabIndex === 2 && <CountryTable/>}
+        {/* {tabIndex === 3 && <GenerationChart/>}
+        {tabIndex === 4 && <FuelPieChart />} */}
       </Box>
     </Container>
   );
