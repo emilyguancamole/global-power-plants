@@ -14,8 +14,8 @@ export interface CountryCapacityType {
 }
 
 export interface CountryDataType {
-  code: string;
-  name: string;
+  country_code: string; // consistent with names of fields returned by api
+  country_name: string;
 }
 
 export interface GenerationOverTimeType {

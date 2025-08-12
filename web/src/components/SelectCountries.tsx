@@ -23,10 +23,13 @@ const SelectCountries = ({
   const [countryData, setCountryData] = useState<CountryDataType[]>([]);
 
   useEffect(() => {
-    fetchCountries().then((data) => setCountryData(data));
+    fetchCountries().then((data) => {
+      setCountryData(data)
+    });
   }, []);
 
   const toggleCountry = (code: string) => {
+    // Update state in App
     if (selectedCountries.includes(code)) {
       setSelectedCountries(selectedCountries.filter((c) => c !== code)); // remove the re-selected country
     } else if (selectedCountries.length < 2) {
@@ -39,20 +42,20 @@ const SelectCountries = ({
       <Label className="text-lg font-semibold">
         Select up to two countries:
       </Label>
-
+      
       <Command className="border rounded-md w-full max-w-md">
-        <CommandInput placeholder="Search countries..." />
+        <CommandInput placeholder="Search countries" />
         <CommandList className="max-h-64 overflow-y-auto">
           <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup>
+          <CommandGroup key="countries">
             {countryData.map((country) => (
               <CommandItem
-                key={country.code}
-                onSelect={() => toggleCountry(country.code)}
+                key={country.country_code}
+                onSelect={() => toggleCountry(country.country_code)}
                 className="flex justify-between cursor-pointer"
               >
-                <span>{country.name}</span>
-                {selectedCountries.includes(country.code) && (
+                <span>{country.country_name} ({country.country_code})</span>
+                {selectedCountries.includes(country.country_code) && (
                   <span className="text-green-600 font-bold">✔</span>
                 )}
               </CommandItem>

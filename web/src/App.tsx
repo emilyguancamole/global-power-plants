@@ -1,17 +1,16 @@
 import "./App.css";
-import React from "react";
+import React, { useState } from "react";
 import { Container, Typography, Tabs, Tab, Box } from "@mui/material";
 import Map from "./components/Map";
 import CountryTable from "./components/CountryTable";
+import SelectCountries from "./components/SelectCountries";
 
 function App() {
-  const [tabIndex, setTabIndex] = React.useState<number>(0);
-  const [selectedCountries, setSelectedCountries] = React.useState<string[]>([
-    "USA",
-  ]);
+  const [tabIndex, setTabIndex] = useState<number>(0);
+
+  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
 
   const handleTabChange = (_event: React.SyntheticEvent, newIndex: number) => {
-    // MUI tabls onChange typing
     setTabIndex(newIndex);
   };
 
@@ -42,8 +41,12 @@ function App() {
         )}
         {tabIndex === 1 && <Map />}
         {tabIndex === 2 && <CountryTable />}
-        {/* {tabIndex === 3 && <GenerationChart/>}
-        {tabIndex === 4 && <FuelPieChart />} */}
+        {tabIndex === 3 &&
+          <div>
+            <SelectCountries selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries} /> 
+          </div>
+        }
+        {/* {tabIndex === 4 && <FuelPieChart />} */}
       </Box>
     </Container>
   );

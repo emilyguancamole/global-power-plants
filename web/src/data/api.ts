@@ -10,7 +10,6 @@ import type {
 
 export const fetchPlants = async (): Promise<PlantType[]> => {
   const response = await fetch(`${API_URL}/plants/coordinates`);
-  // console.log("Raw response:", response);
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
@@ -19,6 +18,7 @@ export const fetchPlants = async (): Promise<PlantType[]> => {
 
 export const fetchCountries = async (): Promise<CountryDataType[]> => {
   const response = await fetch(`${API_URL}/countries`);
+  console.log("Raw response:", response);
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
