@@ -12,3 +12,13 @@ export interface CountryCapacityType {
   country_name: string;
   tot_capacity: number;
 }
+
+export interface CountryDataType {
+  code: string;
+  name: string;
+}
+
+export interface GenerationOverTimeType {
+  year: number;
+  yearly_generation: number;
+}

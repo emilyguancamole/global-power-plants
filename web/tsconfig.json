@@ -9,12 +9,10 @@
     "moduleResolution": "node", 
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    
-    
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }
-/* Path aliases */
-    // "baseUrl": ".",
-    // "paths": {
-    //   "@/*": ["./src/*"]
-    // }
