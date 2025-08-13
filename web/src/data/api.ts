@@ -18,7 +18,7 @@ export const fetchPlants = async (): Promise<PlantType[]> => {
 
 export const fetchCountries = async (): Promise<CountryDataType[]> => {
   const response = await fetch(`${API_URL}/countries`);
-  console.log("Raw response:", response);
+  // console.log("Raw response:", response);
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
@@ -26,7 +26,6 @@ export const fetchCountries = async (): Promise<CountryDataType[]> => {
 }
 
 export const fetchTop25 = async (): Promise<CountryCapacityType[]> => {
-  // console.log("API_URL:", API_URL);
   const response = await fetch(`${API_URL}/countries/top25`);
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
@@ -37,11 +36,17 @@ export const fetchTop25 = async (): Promise<CountryCapacityType[]> => {
 export const fetchGenerationOverTime = async (
   code: string,
 ): Promise<GenerationOverTimeType[]> => {
-  const response = await fetch(
-    `${API_URL}/countries/${code}/generation-over-time`,
-  );
+  const response = await fetch(`${API_URL}/countries/${code}/generation-over-time`);
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
   return response.json();
 };
+
+export const fetchFuelShare = async () => {
+  const response = await fetch(`${API_URL}/plants/fuel-share`);
+  if (!response.ok) {
+    throw new Error(`API request failed with status: ${response.status}`);
+  }
+  return response.json();
+}

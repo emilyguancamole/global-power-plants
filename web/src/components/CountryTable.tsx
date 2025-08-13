@@ -43,14 +43,14 @@ const CountryTable = () => {
       },
     },
     // { field: "country_code", headerName: "Code", width: 100 },
-    { field: "country_name", headerName: "Country", width: 200 },
+    { field: "country_name", headerName: "Country", width: 180 },
     {
       field: "tot_capacity",
       headerName: "Total Capacity (MW)",
       type: "number",
-      width: 200,
-      valueFormatter: (value: number) => {
-        return Math.round(value).toString();
+      width: 150,
+      valueFormatter: (val: number) => {
+        return Math.round(val).toString();
       },
     },
   ];
@@ -58,8 +58,8 @@ const CountryTable = () => {
   return (
     <Box
       sx={{
-        height: 800,
-        width: "80%",
+        height: "95%",
+        width: "100%",
         "& .MuiDataGrid-row:nth-of-type(even)": {
           backgroundColor: "#f5f5f5", // stripes: gray for even rows
         },

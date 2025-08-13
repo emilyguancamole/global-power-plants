@@ -2,20 +2,31 @@ import { useEffect, useState } from "react";
 import { fetchPlants } from "../data/api";
 import { MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet"; // Leaflet for custom layers
-import type { PlantType } from "../data/types";
+import { FUEL_COLORS, type PlantType } from "../data/types";
 
 //TODO ADD KEY FOR COLORS
-const FUEL_COLORS: Record<string, string> = {
-  Solar: "#f5da2a",
-  Wind: "#697cd4ff",
-  Hydro: "#088bb3ff",
-  Gas: "lightgreen",
-  Oil: "brown",
-  Coal: "black",
-  Nuclear: "pink",
-  Biomass: "green",
-  Other: "purple",
-};
+
+function Map() {
+  const [plants, setPlants] = useState<PlantType[]>([]);
+
+  useEffect(() => {
+    fetchPlants().then((data: PlantType[]) => {
+      setPlants(data);
+    });
+  }, []);
+
+  return (
+    <MapContainer
+      center={[20, 0]}
+      zoom={2}
+      style={{ height: "100%", width: "100%" }}
+      preferCanvas={true}
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <PlantsLayer plants={plants} />
+    </MapContainer>
+  );
+}
 
 function PlantsLayer({ plants }: { plants: PlantType[] }) {
   const map = useMap();
@@ -75,27 +86,6 @@ function PlantsLayer({ plants }: { plants: PlantType[] }) {
   return null;
 }
 
-function Map() {
-  const [plants, setPlants] = useState<PlantType[]>([]);
-
-  useEffect(() => {
-    fetchPlants().then((data) => {
-      setPlants(data);
-    });
-  }, []);
-
-  return (
-    <MapContainer
-      center={[20, 0]}
-      zoom={2}
-      style={{ height: "600px", width: "100%" }}
-      preferCanvas={true}
-    >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <PlantsLayer plants={plants} />
-    </MapContainer>
-  );
-}
 
 export default Map;
 

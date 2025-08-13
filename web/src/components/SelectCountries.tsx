@@ -21,6 +21,7 @@ const SelectCountries = ({
   setSelectedCountries,
 }: SelectCountriesProps) => {
   const [countryData, setCountryData] = useState<CountryDataType[]>([]);
+  const [showList, setShowList] = useState(false);
 
   useEffect(() => {
     fetchCountries().then((data) => {
@@ -44,30 +45,36 @@ const SelectCountries = ({
       </Label>
       
       <Command className="border rounded-md w-full max-w-md">
-        <CommandInput placeholder="Search countries" />
-        <CommandList className="max-h-64 overflow-y-auto">
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup key="countries">
-            {countryData.map((country) => (
-              <CommandItem
-                key={country.country_code}
-                onSelect={() => toggleCountry(country.country_code)}
-                className="flex justify-between cursor-pointer"
-              >
-                <span>{country.country_name} ({country.country_code})</span>
-                {selectedCountries.includes(country.country_code) && (
-                  <span className="text-green-600 font-bold">✔</span>
-                )}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </CommandList>
+        <CommandInput 
+          placeholder="Search countries" 
+          onFocus={() => setShowList(true)}
+          onBlur={() => setTimeout(() => setShowList(false), 150)}
+        />
+        {showList && (
+          <CommandList className="max-h-64 overflow-y-auto">
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup key="countries">
+              {countryData.map((country) => (
+                <CommandItem
+                  key={country.country_code}
+                  onSelect={() => toggleCountry(country.country_code)}
+                  className="flex justify-between cursor-pointer"
+                >
+                  <span>{country.country_name} ({country.country_code})</span>
+                  {selectedCountries.includes(country.country_code) && (
+                    <span className="text-green-600 font-bold">✔</span>
+                  )}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        )}    
       </Command>
 
       {/* Show selected countries */}
       {selectedCountries.length > 0 && (
         <div className="text-sm text-gray-600">
-          Selected: {selectedCountries.join(", ")}
+          Showing: {selectedCountries.join(", ")}
         </div>
       )}
     </div>
