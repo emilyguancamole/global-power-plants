@@ -3,6 +3,21 @@ import db from '../db';
 
 const router = Router();
 
+// List of all countries
+router.get("/", async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT DISTINCT country_code, country_name
+            FROM countries
+            ORDER BY country_name;
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    }
+});
+
 // Country Power Generation Table: top 25 countries' generating capacity
 router.get('/top25', async (req, res) => {
     try {
@@ -25,7 +40,7 @@ router.get('/top25', async (req, res) => {
 });
 
 // Country Electricity Generation Over Time: annual elec gen for the selected country code
-router.get('/:code/generation', async (req, res) => {
+router.get('/:code/generation-over-time', async (req, res) => {
     const { code } = req.params;
     try {
         const result = await db.query(

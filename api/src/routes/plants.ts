@@ -7,7 +7,7 @@ const router = Router();
 router.get('/coordinates', async (req, res) => {
     try {
         const result = await db.query(
-            `SELECT gppd_idnr, latitude, longitude, primary_fuel, capacity_mw
+            `SELECT gppd_idnr, name, latitude, longitude, primary_fuel, capacity_mw
             FROM power_plants;`
         );
         res.json(result.rows) // sends as json

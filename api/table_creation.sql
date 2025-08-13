@@ -3,7 +3,7 @@
 --- Also includes some custom indexes for querying.
 
 CREATE TABLE countries (
-    country_code CHAR(3) PRIMARY KEY, -- ISO 3166-1 alpha-3
+    country_code CHAR(3) PRIMARY KEY,
     country_name TEXT NOT NULL -- corresponds to "country"
 );
 
