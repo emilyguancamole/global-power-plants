@@ -47,6 +47,6 @@ CREATE TABLE generation_data (
 --);
 
 -- Helpful indexes
-CREATE INDEX idx_power_plants_country_code ON power_plants(country_code);
-CREATE INDEX idx_generation_year ON generation_data(year);
-CREATE INDEX idx_gen_country_year ON generation_data(year, gppd_idnr);
+-- CREATE INDEX idx_power_plants_country_code ON power_plants(country_code);
+-- CREATE INDEX idx_generation_year ON generation_data(year);
+-- CREATE INDEX idx_gen_country_year ON generation_data(year, gppd_idnr);

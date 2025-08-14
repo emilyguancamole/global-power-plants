@@ -3,12 +3,12 @@ import pandas as pd
 import psycopg2
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv() # api/.env
 DB_NAME = "global_power_plants"
 DB_USER = "postgres"
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = "localhost"
-DB_PORT = "5432"
+DB_HOST = "localhost" #os.getenv("DB_HOST") # "localhost" for local machine; "db" for potgres in docker
+DB_PORT = "5433"
 CSV_FILE = "../globalpowerplantdatabase/global_power_plant_database.csv"
 
 '''

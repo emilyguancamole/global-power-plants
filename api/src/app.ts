@@ -26,7 +26,8 @@ app.use(express.json());
 app.use('/plants', plantsRouter);
 app.use('/countries', countriesRouter);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const PORT = Number(process.env.PORT) || 3000;
+
+app.listen(PORT, '0.0.0.0', () => { // 0.0.0.0 allows connections from outside the container
+  console.log(`API running on port ${PORT}`);
 });
