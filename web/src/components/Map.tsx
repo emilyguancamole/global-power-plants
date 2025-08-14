@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchPlants } from "../data/api";
-import { MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet"; // Leaflet for custom layers
 import { FUEL_COLORS, type PlantType } from "../data/types";
 

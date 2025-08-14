@@ -41,8 +41,8 @@ function App() {
           display: 'grid',
           gridTemplateColumns: { xs: '1fr', lg: '70% 30%' },
           gridTemplateRows: { xs:'auto', lg:'500px'}, // 2 rows, set responsive height
-          gap: 2, // spacing between grid items
-          mb: 8   // margin bottom
+          gap: 1, // spacing between grid items
+          mb: 4   // margin bottom
         }}
       >
 
@@ -87,13 +87,13 @@ function App() {
       <Box
         sx={{
           display: 'grid',
-          gap: 2,
+          gap: 1,
           gridTemplateColumns: { xs: '1fr', lg: '50% 50%' },
           gridTemplateRows: { xs:'auto', lg:'500px'},
-          mb: 8
+          mb: 4
         }}
       >
-          {/* Pie Chart */} 
+        {/* Pie Chart */} 
         <Box 
           sx={{ 
             display: "flex",
@@ -137,24 +137,26 @@ function App() {
       </Box>
     </div>
   )
-      
-      
-        
-    
+
   
 return (
-  <Container>
-    <Tabs value={tabIndex} onChange={handleTabChange} centered>
-      <Tab label="All" />
-      <Tab label="Power Plant Map" />
-      <Tab label="Country Table" />
-      <Tab label="Generation Over Time" />
-      <Tab label="Fuel Pie Chart" />
-    </Tabs>
-    <Typography variant="h3" align="center" gutterBottom>
-      Global Power Dashboard
-    </Typography>
-  </Container>
-);
+    <Container>
+      <Typography sx={{ mt: 4 }} variant="h3" align="center" gutterBottom>
+        Global Power Dashboard
+      </Typography>
+
+      <Tabs value={tabIndex} onChange={handleTabChange} centered>
+        <Tab label="Dashboard" />
+        <Tab label="Form" />
+      </Tabs>
+
+      {tabIndex === 0 && (
+        <Box>
+          {dashboardContent}
+        </Box>
+      )}
+    </Container>
+  );
+
 }
 export default App;

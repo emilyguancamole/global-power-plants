@@ -1,0 +1,36 @@
+services:
+  api:
+    build: ./api # where the Dockerfile is for the service
+    container_name: power-plants-api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db     # ensure db is started before backend
+    env_file:
+      - ./api/.env
+
+  web:
+    build: ./web
+    container_name: power-plants-web
+    ports:
+      - "5173:8080"   # local:container
+    env_file:
+      - ./web/.env
+    depends_on:
+      - api
+      
+
+  db:
+    image: postgres:16
+    container_name: power-plants-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"   # optional, if want to connect from host machine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

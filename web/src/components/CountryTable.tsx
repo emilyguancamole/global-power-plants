@@ -34,7 +34,7 @@ const CountryTable = () => {
       headerName: "Rank",
       width: 80,
       type: "number",
-      valueGetter: (val, row) => {
+      valueGetter: (_, row) => {
         return (
           countries.findIndex(
             (country) => country.country_code === row.country_code,

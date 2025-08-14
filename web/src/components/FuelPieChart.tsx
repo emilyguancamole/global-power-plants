@@ -30,7 +30,7 @@ const FuelPieChart = () => {
     
 
     return ( // create Cell components for each slice
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height="100%">
             <PieChart>
                 <Pie
                     data={fuelData}

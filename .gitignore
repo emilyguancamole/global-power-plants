@@ -29,4 +29,4 @@ globalpowerplantdatabase
 *.sw?
 
 # Environment variables
-.env
+.env*
