@@ -11,7 +11,7 @@ CREATE TABLE power_plants (
     gppd_idnr TEXT PRIMARY KEY, -- 10 or 12 character identifier for the power plant
     name TEXT NOT NULL,
     country_code CHAR(3) REFERENCES countries(country_code) ON DELETE CASCADE, -- if country deleted, referential integrity
-    capacity_mw NUMERIC, -- generating capacity megawatts
+    capacity_mw NUMERIC, -- generating capacity megawatts. = sum of plants unless manually overridden
     latitude NUMERIC NOT NULL,
     longitude NUMERIC NOT NULL,
     primary_fuel TEXT NOT NULL,
@@ -37,6 +37,26 @@ CREATE TABLE generation_data (
     generation_data_source TEXT,
     UNIQUE(gppd_idnr, year)  -- Ensure unique plant-year combinations
 );
+
+-- Overrides for country-level generating capacity and generation data. If present in table, these are not null and override the values in power_plants and generation_data.
+CREATE TABLE country_capacity_overrides (
+    id SERIAL PRIMARY KEY,
+    country_code CHAR(3) REFERENCES countries(country_code) ON DELETE CASCADE,
+    capacity_override_mw NUMERIC NOT NULL, -- override for country-level generating capacity
+    updated_at TIMESTAMP DEFAULT now(),
+    UNIQUE(country_code) -- one override per country
+);
+
+CREATE TABLE country_generation_overrides (
+    id SERIAL PRIMARY KEY,
+    country_code CHAR(3) REFERENCES countries(country_code) ON DELETE CASCADE,
+    year INT NOT NULL,
+    generation_override_gwh NUMERIC NOT NULL,
+    updated_at TIMESTAMP DEFAULT now(),
+    UNIQUE(country_code, year)
+);
+
+-- COALESCE() returns first non-null among its arguments
 
 -- NOT YET BUT MAYBE LATER:
 --CREATE TABLE fuel_types (

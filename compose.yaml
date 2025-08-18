@@ -37,8 +37,7 @@ services:
     ports:
       - "${DB_PORT}:5432"   # optional, if want to connect from host machine
     volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./api/src/db:/docker-entrypoint-initdb.d  #? runs sql files when volume first created
-
+      - db_data:/var/lib/postgresql/data # persist data
+      - ./api/src/db:/docker-entrypoint-initdb.d  # initialize db with script in api/src/db
 volumes:
   db_data:

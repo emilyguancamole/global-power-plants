@@ -7,13 +7,14 @@ load_dotenv() # api/.env
 DB_NAME = "global_power_plants"
 DB_USER = "postgres"
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = "localhost" #os.getenv("DB_HOST") # "localhost" for local machine; "db" for potgres in docker
-DB_PORT = "5433"
-CSV_FILE = "../globalpowerplantdatabase/global_power_plant_database.csv"
+DB_HOST = os.getenv("DB_HOST") # "localhost" for local machine; "db" for potgres in docker
+DB_PORT = os.getenv("DB_PORT") #should be "5433"; this is the port on the HOST machine on which the db runs
+CSV_FILE = "./globalpowerplantdatabase/global_power_plant_database.csv"
 
 '''
 Script for data loading from CSV to Postgres, using Python via psycopg2. Assumes database and tables already created.
 Inserts data in the order (countries → plants → generation).
+Uses .env from root folder, where DB_HOST is localhost
 '''
 
 
