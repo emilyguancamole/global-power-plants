@@ -3,10 +3,9 @@ import {
   CommandInput,
   CommandList,
   CommandEmpty,
-  CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import type { CountryDataType } from "@/data/types";
 import { fetchCountries } from "@/data/api";
@@ -25,7 +24,7 @@ const SelectCountries = ({
 
   useEffect(() => {
     fetchCountries().then((data) => {
-      setCountryData(data)
+      setCountryData(data);
     });
   }, []);
 
@@ -35,48 +34,43 @@ const SelectCountries = ({
       setSelectedCountries(selectedCountries.filter((c) => c !== code)); // remove the re-selected country
     } else if (selectedCountries.length < 2) {
       setSelectedCountries([...selectedCountries, code]); // add new countrycode
-    } // else do nothing if already 2 selected
-  }
+    } else {
+      setSelectedCountries([selectedCountries[1], code]); // unselect oldest selected
+    }
+  };
 
   return (
     <div className="w-full space-y-4">
-      <Label className="text-lg font-semibold">
-        Select up to two countries:
+      <Label className="px-1 text-sm font-medium p-0">
+        Select up to 2 countries to display
       </Label>
-      
-      <Command className="border rounded-md w-full max-w-md">
-        <CommandInput 
-          placeholder="Search countries" 
-          onFocus={() => setShowList(true)}
+
+      <Command className="rounded-md h-auto">
+        <CommandInput
+          placeholder="Search countries"
+          onClick={() => setShowList(true)}
           onBlur={() => setTimeout(() => setShowList(false), 150)}
         />
         {showList && (
-          <CommandList className="max-h-64 overflow-y-auto">
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup key="countries">
-              {countryData.map((country) => (
-                <CommandItem
-                  key={country.country_code}
-                  onSelect={() => toggleCountry(country.country_code)}
-                  className="flex justify-between cursor-pointer"
-                >
-                  <span>{country.country_name} ({country.country_code})</span>
-                  {selectedCountries.includes(country.country_code) && (
-                    <span className="text-green-600 font-bold">✔</span>
-                  )}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+          <CommandList className="p-0">
+            <CommandEmpty>No results found</CommandEmpty>
+            {countryData.map((country) => (
+              <CommandItem
+                key={country.country_code}
+                onSelect={() => toggleCountry(country.country_code)}
+                className="flex justify-between cursor-pointer"
+              >
+                <span>
+                  {country.country_name} ({country.country_code})
+                </span>
+                {selectedCountries.includes(country.country_code) && (
+                  <span className="text-green-600 font-bold">✓</span>
+                )}
+              </CommandItem>
+            ))}
           </CommandList>
-        )}    
+        )}
       </Command>
-
-      {/* Show selected countries */}
-      {selectedCountries.length > 0 && (
-        <div className="text-sm text-gray-600">
-          Showing: {selectedCountries.join(", ")}
-        </div>
-      )}
     </div>
   );
 };

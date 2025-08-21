@@ -32,7 +32,7 @@ const CountryTable = () => {
     {
       field: "rank",
       headerName: "Rank",
-      width: 80,
+      width: 40,
       type: "number",
       valueGetter: (_, row) => {
         return (
@@ -46,9 +46,9 @@ const CountryTable = () => {
     { field: "country_name", headerName: "Country", width: 180 },
     {
       field: "tot_capacity",
-      headerName: "Total Capacity (MW)",
+      headerName: "Capacity (MW)",
       type: "number",
-      width: 150,
+      width: 130,
       valueFormatter: (val: number) => {
         return Math.round(val).toString();
       },

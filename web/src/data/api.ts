@@ -23,7 +23,7 @@ export const fetchCountries = async (): Promise<CountryDataType[]> => {
     throw new Error(`API request failed with status: ${response.status}`);
   }
   return response.json();
-}
+};
 
 export const fetchTop25 = async (): Promise<CountryCapacityType[]> => {
   const response = await fetch(`${API_URL}/countries/top25`);
@@ -36,7 +36,9 @@ export const fetchTop25 = async (): Promise<CountryCapacityType[]> => {
 export const fetchGenerationOverTime = async (
   code: string,
 ): Promise<GenerationOverTimeType[]> => {
-  const response = await fetch(`${API_URL}/countries/${code}/generation-over-time`);
+  const response = await fetch(
+    `${API_URL}/countries/${code}/generation-over-time`,
+  );
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
@@ -49,4 +51,35 @@ export const fetchFuelShare = async () => {
     throw new Error(`API request failed with status: ${response.status}`);
   }
   return response.json();
-}
+};
+
+export const editCountryCapacity = async (code: string, capacity: number) => {
+  const response = await fetch(`${API_URL}/countries/${code}/capacity-mw`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ capacity }), // request body as JSON
+  });
+  if (!response.ok) {
+    throw new Error(`API request failed with status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const editCountryYearlyGeneration = async (
+  code: string,
+  year: number,
+  generationData: number,
+) => {
+  const response = await fetch(
+    `${API_URL}/countries/${code}/generation-gwh/${year}`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ generationData }),
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`API request failed with status: ${response.status}`);
+  }
+  return response.json();
+};

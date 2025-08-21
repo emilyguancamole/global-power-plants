@@ -23,7 +23,8 @@ export interface GenerationOverTimeType {
   yearly_generation: number;
 }
 
-export interface GenerationChartDataPoint { //? 2020, USA: 321, CAN: 203
+export interface GenerationChartDataPoint {
+  //? 2020, USA: 321, CAN: 203
   year: number;
   [country_code: string]: number | null;
 }
@@ -47,5 +48,5 @@ export const FUEL_COLORS: Record<string, string> = {
   Waste: "#9a1b54ff",
   Storage: "#dfb678ff",
   Geothermal: "#ed9613ff",
-  Cogeneration: "#a16fd3ff"
+  Cogeneration: "#a16fd3ff",
 };

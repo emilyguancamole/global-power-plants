@@ -17,7 +17,7 @@ function Map() {
 
   return (
     <MapContainer
-      center={[20, 0]}
+      center={[25, 0]}
       zoom={2}
       style={{ height: "100%", width: "100%" }}
       preferCanvas={true}
@@ -86,60 +86,4 @@ function PlantsLayer({ plants }: { plants: PlantType[] }) {
   return null;
 }
 
-
 export default Map;
-
-// const Map = () => {
-//   const [plants, setPlants] = useState<PlantType[]>([]);
-//   const [visiblePlants, setVisiblePlants] = useState<PlantType[]>([]);
-
-//   // Fetch power plant data
-//   useEffect(() => {
-//     fetchPlants().then((data: PlantType[]) => {
-//       // deduplicate by gppd_idnr
-//       const unique: PlantType[] = Array.from(
-//         new window.Map(data.map(p => [p.gppd_idnr, p])).values()
-//       );
-//       setPlants(unique);
-//       setVisiblePlants(unique.slice(0, 1000));
-//       setTimeout(() => setVisiblePlants(unique.slice(0, 500)), 200);
-//       setTimeout(() => setVisiblePlants(unique), 200);
-//     })
-//     .catch((error) => console.error("Error fetching plants:", error));
-//   }, []);
-
-//   return (
-//     <MapContainer
-//       center={[20, 0]}
-//       zoom={2}
-//       style={{ height: "600px", width: "100%" }}
-//       preferCanvas={true} // faster than svg
-//     >
-//       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-//       {/* <MarkerClusterGroup chunkedLoading> */}
-//         {visiblePlants.map((plant) => (
-//           <CircleMarker
-//             key={plant.gppd_idnr}
-//             center={[plant.latitude, plant.longitude]}
-//             radius={plant.capacity_mw > 1000 ? 3 : 2} //? scale size
-//             pathOptions={{
-//               color: FUEL_COLORS[plant.primary_fuel] || "gray",
-//               fillOpacity: 0.7,
-//               stroke: false
-//             }}
-//             eventHandlers={{
-//               mouseover: (e) => {
-//                 const marker = e.target;
-//                 marker.bindTooltip(`${plant.name} - ${plant.capacity_mw} MW`).openTooltip();
-//               }
-//             }}
-//           >
-//           </CircleMarker>
-//         ))}
-//       {/* </MarkerClusterGroup> */}
-
-//     </MapContainer>
-//   );
-// };
-
-// export default Map;

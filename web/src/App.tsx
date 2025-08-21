@@ -1,11 +1,12 @@
 import "./App.css";
-import React, { useState } from "react";
-import { Container, Typography, Tabs, Tab, Box } from "@mui/material";
+import { useState } from "react";
+import { Container, Typography, Box } from "@mui/material";
 import Map from "@/components/Map";
 import CountryTable from "@/components/CountryTable";
 import SelectCountries from "@/components/SelectCountries";
 import CountryGenerationChart from "@/components/CountryGenerationChart";
-import FuelPieChart from "./components/FuelPieChart";
+import FuelPieChart from "@/components/FuelPieChart";
+import UpdateForm from "@/components/UpdateForm";
 
 /*
 Note on grid positioning:
@@ -21,41 +22,45 @@ Note on grid positioning:
 */
 
 //todo: theme
-//todo tab for form?
 
 function App() {
-  const [tabIndex, setTabIndex] = useState<number>(0);
+  // const [tabIndex, setTabIndex] = useState<number>(0);
 
-  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
+  // countries to display in generation chart
+  const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<
+    string[]
+  >([]);
+  // for update form
+  const [updateType, setUpdateType] = useState<
+    "capacity" | "generation" | null
+  >(null);
+  const [selectedUpdateCountry, setSelectedUpdateCountry] = useState<string>();
+  const [updateYear, setUpdateYear] = useState<number | null>(null); // for generation data only
+  const [updateValue, setUpdateValue] = useState<number | null>(null);
 
-  const handleTabChange = (_event: React.SyntheticEvent, newIndex: number) => {
-    setTabIndex(newIndex);
-  };
-
-  
   const dashboardContent = (
     <div>
       {/* Row 1 */}
-      <Box 
+      <Box
         sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', lg: '70% 30%' },
-          gridTemplateRows: { xs:'auto', lg:'500px'}, // 2 rows, set responsive height
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", lg: "70% 30%" },
+          gridTemplateRows: { xs: "auto", lg: "500px" }, // 2 rows, set responsive height
           gap: 1, // spacing between grid items
-          mb: 4   // margin bottom
+          mb: 4, // margin bottom
         }}
       >
-
         {/* Map */}
-        <Box sx={{ 
-          display: 'flex', // flexcolumn
-          flexDirection: 'column',
-          height: '100%',
-          minHeight: 0, // let it shrink
-          boxShadow: 1, 
-          borderRadius: 1, 
-          p: 2,
-          overflow: 'hidden' //? auto for scroll?
+        <Box
+          sx={{
+            display: "flex", // flexcolumn
+            flexDirection: "column",
+            height: "100%",
+            minHeight: 0, // let it shrink
+            boxShadow: 1,
+            borderRadius: 1,
+            p: 2,
+            overflow: "hidden", //? auto for scroll?
           }}
         >
           <Typography variant="h5" gutterBottom>
@@ -64,16 +69,47 @@ function App() {
           <Map />
         </Box>
 
+        {/* Pie Chart */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            minHeight: 0,
+            gridColumn: { xs: "1", lg: "2 " },
+            boxShadow: 1,
+            borderRadius: 1,
+            p: 2,
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Fuel Distribution
+          </Typography>
+          <FuelPieChart />
+        </Box>
+      </Box>
+
+      {/* Row 2 */}
+      <Box
+        sx={{
+          display: "grid",
+          gap: 1,
+          gridTemplateColumns: { xs: "1fr", lg: "40% 60%" },
+          gridTemplateRows: { xs: "auto", lg: "500px" },
+          mb: 4,
+        }}
+      >
         {/* Country Table */}
-        <Box sx={{ 
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          minHeight: 0,
-          boxShadow: 1, 
-          borderRadius: 1, 
-          p: 2,
-          overflow: "hidden"
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            minHeight: 0,
+            boxShadow: 1,
+            borderRadius: 1,
+            p: 2,
+            overflow: "hidden",
           }}
         >
           <Typography variant="h5" gutterBottom>
@@ -81,82 +117,67 @@ function App() {
           </Typography>
           <CountryTable />
         </Box>
-      </Box>
-
-      {/* Row 2 */}
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 1,
-          gridTemplateColumns: { xs: '1fr', lg: '50% 50%' },
-          gridTemplateRows: { xs:'auto', lg:'500px'},
-          mb: 4
-        }}
-      >
-        {/* Pie Chart */} 
-        <Box 
-          sx={{ 
+        {/* Generation Chart */}
+        <Box
+          sx={{
             display: "flex",
             flexDirection: "column",
             height: "100%",
             minHeight: 0,
-            gridColumn: { xs: '1', lg: '1 / 2' },
-            boxShadow: 1, 
-            borderRadius: 1, 
-            p: 2 
+            gridColumn: { xs: "1", lg: "2 / 3" },
+            boxShadow: 1,
+            borderRadius: 1,
+            p: 2,
           }}
         >
           <Typography variant="h5" gutterBottom>
-            Fuel Distribution
-          </Typography>
-          <FuelPieChart />
-          </Box>
-
-          {/* Generation Chart */}
-          <Box 
-            sx={{ 
-              display: "flex",
-              flexDirection: "column",
-              height: "100%",
-              minHeight: 0,
-              gridColumn: { xs: '1', lg: '2 / 3' }, 
-              boxShadow: 1, 
-              borderRadius: 1, 
-              p: 2 
-            }}
-          >
-          <Typography variant="h5" gutterBottom>
             Generation Over Time
           </Typography>
-          <SelectCountries 
-            selectedCountries={selectedCountries} 
-            setSelectedCountries={setSelectedCountries} 
-          /> 
-          <CountryGenerationChart selectedCountries={selectedCountries} />
+          <Box sx={{ mb: 3 }}>
+            <SelectCountries
+              selectedCountries={selectedDisplayCountries}
+              setSelectedCountries={setSelectedDisplayCountries}
+            />
+          </Box>
+          <CountryGenerationChart
+            selectedCountries={selectedDisplayCountries}
+          />
         </Box>
       </Box>
-    </div>
-  )
 
-  
-return (
+      {/* Row 3 */}
+      <Box
+        sx={{
+          display: "grid",
+          gap: 1,
+          // gridTemplateColumns: { xs: '1fr', lg: '40% 60%' },
+          gridTemplateRows: { xs: "auto", lg: "500px" },
+          mb: 4,
+        }}
+      >
+        {/* Edit form */}
+        <UpdateForm
+          updateType={updateType}
+          setUpdateType={setUpdateType}
+          selectedUpdateCountry={selectedUpdateCountry!} // non-null assertion operator
+          setSelectedUpdateCountry={setSelectedUpdateCountry}
+          updateYear={updateYear!}
+          setUpdateYear={setUpdateYear}
+          updateValue={updateValue!}
+          setUpdateValue={setUpdateValue}
+        />
+      </Box>
+    </div>
+  );
+
+  return (
     <Container>
       <Typography sx={{ mt: 4 }} variant="h3" align="center" gutterBottom>
         Global Power Dashboard
       </Typography>
 
-      <Tabs value={tabIndex} onChange={handleTabChange} centered>
-        <Tab label="Dashboard" />
-        <Tab label="Form" />
-      </Tabs>
-
-      {tabIndex === 0 && (
-        <Box>
-          {dashboardContent}
-        </Box>
-      )}
+      <Box>{dashboardContent}</Box>
     </Container>
   );
-
 }
 export default App;
