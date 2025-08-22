@@ -20,9 +20,9 @@ CREATE TABLE power_plants (
     other_fuel3 TEXT,
     commissioning_year INT,
     owner TEXT,
-    source TEXT,  -- ? i guess references can be placed in another table. source also applies to generation data... so I think cur schema is in 2NF
+    source TEXT,  -- depends on only the plant-level source
     url TEXT,
-    geolocation_source TEXT, -- ? depends on lat/long, which depend on gppd_idnr... sep geoloc table for 3NF?
+    geolocation_source TEXT,
     wepp_id TEXT, -- a reference to a unique plant identifier in the widely-used PLATTS-WEPP database
     year_of_capacity_data INT
 );

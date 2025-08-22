@@ -41,7 +41,8 @@ function Map() {
           boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
           fontSize: 11,
           zIndex: 1000, // ensure legend is above map
-          cursor: "pointer",
+          maxHeight: 200, // for mobile
+          overflow: "auto", // scroll
         }}
       >
         <div

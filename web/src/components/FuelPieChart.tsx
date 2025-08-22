@@ -40,21 +40,6 @@ const FuelPieChart = () => {
           cx="50%"
           cy="50%"
           outerRadius={120}
-          // label={({ primary_fuel, percent = 0,x,y }) => {
-          //     return percent > 0.03 ? (
-          //         <text
-          //     x={x}
-          //     y={y+10}
-          //     textAnchor="middle"
-          //     dominantBaseline="central"
-          //     fontSize={12}
-          //     fill={FUEL_COLORS[primary_fuel]}
-          // >
-          //     {`${primary_fuel} ${(percent * 100).toFixed(1)}%`}
-          // </text>
-
-          //     ) : '';
-          // }} // label for >3% of pie
           labelLine={false}
         >
           {fuelData.map((entry) => (

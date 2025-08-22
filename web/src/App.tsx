@@ -11,11 +11,11 @@ import { fetchGenerationOverTime, fetchTop25 } from "./data/api";
 import type { CountryCapacityType, GenerationOverTimeType } from "@/data/types";
 
 function App() {
-  // countries to display in generation chart
+  // Countries to display in generation chart
   const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<
     string[]
   >(["USA", "CAN"]);
-  // state for update form
+  // State for update form
   const [updateType, setUpdateType] = useState<
     "capacity" | "generation" | null
   >(null);
@@ -23,7 +23,7 @@ function App() {
   const [updateYear, setUpdateYear] = useState<number | null>(null); // generation data only
   const [updateValue, setUpdateValue] = useState<number | null>(null);
 
-  // Fetching and state for generation chart & capacity table data lifted up for auto refresh after updates
+  // Fetching and state for generation chart & capacity table data
   const [top25Data, setTop25Data] = useState<CountryCapacityType[]>([]);
   const refetchTop25Data = useCallback(async () => {
     const data = await fetchTop25();
@@ -90,7 +90,7 @@ function App() {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            minHeight: 350,
+            minHeight: 400,
             gridColumn: { xs: "1", lg: "2 " },
             boxShadow: 1,
             borderRadius: 1,
@@ -98,7 +98,7 @@ function App() {
           }}
         >
           <Typography variant="h5" gutterBottom>
-            Fuel Distribution
+            Primary Fuel Distribution
           </Typography>
           <FuelPieChart />
         </Box>
@@ -138,7 +138,7 @@ function App() {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            minHeight: 300,
+            minHeight: 400,
             gridColumn: { xs: "1", lg: "2" },
             boxShadow: 1,
             borderRadius: 1,
