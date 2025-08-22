@@ -12,24 +12,27 @@ import type { CountryCapacityType, GenerationOverTimeType } from "@/data/types";
 
 function App() {
   // countries to display in generation chart
-  const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<string[]>(["USA", "CAN"]);
-  // for update form
+  const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<
+    string[]
+  >(["USA", "CAN"]);
+  // state for update form
   const [updateType, setUpdateType] = useState<
     "capacity" | "generation" | null
   >(null);
   const [selectedUpdateCountry, setSelectedUpdateCountry] = useState<string>();
-  const [updateYear, setUpdateYear] = useState<number | null>(null); // for generation data only
+  const [updateYear, setUpdateYear] = useState<number | null>(null); // generation data only
   const [updateValue, setUpdateValue] = useState<number | null>(null);
 
-  // Fetching and state for generation chart & capacity table data lifted up for auto updates after updates to update form
-  const [top25Data, setTop25Data] = useState<CountryCapacityType[]>([]); 
-  const [generationData, setGenerationData] = useState<Record<string, GenerationOverTimeType[]>>({}); // {countrycode -> gen data}
-
+  // Fetching and state for generation chart & capacity table data lifted up for auto refresh after updates
+  const [top25Data, setTop25Data] = useState<CountryCapacityType[]>([]);
   const refetchTop25Data = useCallback(async () => {
     const data = await fetchTop25();
     setTop25Data(data);
   }, []);
 
+  const [generationData, setGenerationData] = useState<
+    Record<string, GenerationOverTimeType[]>
+  >({}); // {countrycode -> gen data}
   const refetchGenerationData = useCallback(async (countries: string[]) => {
     const newData: Record<string, GenerationOverTimeType[]> = {};
     for (const code of countries) {
@@ -37,11 +40,11 @@ function App() {
     }
     setGenerationData(newData);
   }, []);
-     
+
   // Initial fetches
   useEffect(() => {
     refetchTop25Data();
-  }, [refetchTop25Data]); 
+  }, [refetchTop25Data]);
 
   useEffect(() => {
     if (selectedDisplayCountries.length > 0) {
@@ -72,7 +75,7 @@ function App() {
             boxShadow: 1,
             borderRadius: 1,
             p: 2,
-            overflow: "hidden", 
+            overflow: "hidden",
           }}
         >
           <Typography variant="h5" gutterBottom>
@@ -127,7 +130,7 @@ function App() {
           <Typography variant="h5" gutterBottom>
             Top 25 Countries by Capacity
           </Typography>
-          <CountryTable data={top25Data}/>
+          <CountryTable data={top25Data} />
         </Box>
         {/* Generation Chart */}
         <Box
@@ -156,7 +159,7 @@ function App() {
             generationData={generationData}
           />
         </Box>
-        
+
         {/* Edit form */}
         <Box
           sx={{
@@ -182,7 +185,8 @@ function App() {
             setUpdateYear={setUpdateYear}
             updateValue={updateValue!}
             setUpdateValue={setUpdateValue}
-            onDataUpdated={() => { // callback after data updated, refresh data/update state in App
+            onDataUpdated={() => {
+              // callback after data updated, refresh data/update state in App
               refetchTop25Data();
               refetchGenerationData(selectedDisplayCountries);
             }}
@@ -203,8 +207,6 @@ function App() {
   );
 }
 export default App;
-
-
 
 /*
 Note on grid positioning:

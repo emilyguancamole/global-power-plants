@@ -30,9 +30,9 @@ const CountryTable = ({ data }: CountryTableProps) => {
         );
       },
     },
-    { 
-      field: "country_name", 
-      headerName: "Country", 
+    {
+      field: "country_name",
+      headerName: "Country",
       width: 175,
       align: "left",
       headerAlign: "left",

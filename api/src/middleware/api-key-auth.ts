@@ -7,5 +7,7 @@ export function apiKeyAuth(req: Request, res: Response, next: NextFunction) {
     if (!apiKey || apiKey !== correctKey) {
         return res.status(401).json({ error: 'Unauthorized: Invalid or missing API key'})
     }
-    next(); // valid key, move on to route handler
+    next(); 
 }
+
+// valid key, move on to route handler

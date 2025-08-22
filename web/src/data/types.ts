@@ -14,7 +14,7 @@ export interface CountryCapacityType {
 }
 
 export interface CountryDataType {
-  country_code: string; // consistent with names of fields returned by api
+  country_code: string;
   country_name: string;
 }
 

@@ -22,7 +22,8 @@ router.get("/", async (req, res) => {
     // Compute the baseline total capacity from power_plants
     // Check if a country-level override in country_capacity_overrides.
     // Return the effective capacity (COALESCE(override, sum)).
-    
+    // group by: sum per country instead of all rows
+
 router.get('/top25', async (req, res) => {
     try {
         const result = await db.query(
@@ -40,11 +41,9 @@ router.get('/top25', async (req, res) => {
 
             GROUP BY c.country_code, c.country_name, co.capacity_override_mw
             ORDER BY tot_capacity DESC
-            LIMIT 25` // group by: SUM per country instead of all rows
-                            // if SELECT something that isn’t inside an aggregate, it must appear in GROUP BY.
+            LIMIT 25` 
         );
-    
-        res.json(result.rows) // sends as json
+        res.json(result.rows)
     } catch (err: any) {
         console.error(err)
         res.status(500).json({ error: err }); 
@@ -84,7 +83,6 @@ router.put('/:code/capacity-mw', async (req, res) => {
     const { code } = req.params;
     const { capacity } = req.body;
 
-    // capacity = null means remove override
     if (capacity === null || typeof capacity !== 'number' || capacity < 0) {
         return res.status(400).json({ error: "Capacity must be a non-negative number" });
     }

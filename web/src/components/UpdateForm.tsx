@@ -19,7 +19,11 @@ import {
 } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { editCountryCapacity, editCountryYearlyGeneration, fetchCountries } from "@/data/api";
+import {
+  editCountryCapacity,
+  editCountryYearlyGeneration,
+  fetchCountries,
+} from "@/data/api";
 import type { CountryDataType } from "@/data/types";
 
 //capacity_mw – The country's electrical generating capacity in megawatts.
@@ -34,7 +38,7 @@ type UpdateFormProps = {
   setUpdateYear: (year: number | null) => void;
   updateValue: number | null;
   setUpdateValue: (updateValue: number | null) => void;
-  onDataUpdated: () => void // called after update
+  onDataUpdated: () => void; // called after update
 };
 const UpdateForm = ({
   updateType,
@@ -47,14 +51,14 @@ const UpdateForm = ({
   setUpdateValue,
   onDataUpdated,
 }: UpdateFormProps) => {
-    const [countryData, setCountryData] = useState<CountryDataType[]>([]);
-    const [showList, setShowList] = useState(false);
-  
-    useEffect(() => {
-      fetchCountries().then((data) => {
-        setCountryData(data);
-      });
-    }, []);
+  const [countryData, setCountryData] = useState<CountryDataType[]>([]);
+  const [showList, setShowList] = useState(false);
+
+  useEffect(() => {
+    fetchCountries().then((data) => {
+      setCountryData(data);
+    });
+  }, []);
 
   const handleSubmit = async () => {
     // validate inputs
@@ -78,23 +82,23 @@ const UpdateForm = ({
     }
     // call API
     try {
-        if (updateType === "capacity") {
-            await editCountryCapacity(selectedUpdateCountry, updateValue);
-        } else if (updateType === "generation") {
-            await editCountryYearlyGeneration(
-                selectedUpdateCountry,
-                updateYear,
-                updateValue,
-            );
-        }
-        onDataUpdated();
-        // Reset form
-        setUpdateType(null);
-        setSelectedUpdateCountry("");
-        setUpdateYear(null);
-        setUpdateValue(null);
-    } catch(err) {
-        alert("Update failed");
+      if (updateType === "capacity") {
+        await editCountryCapacity(selectedUpdateCountry, updateValue);
+      } else if (updateType === "generation") {
+        await editCountryYearlyGeneration(
+          selectedUpdateCountry,
+          updateYear,
+          updateValue,
+        );
+      }
+      onDataUpdated();
+      // Reset form
+      setUpdateType(null);
+      setSelectedUpdateCountry("");
+      setUpdateYear(null);
+      setUpdateValue(null);
+    } catch (err) {
+      alert("Update failed");
     }
   };
 
@@ -189,7 +193,10 @@ const UpdateForm = ({
         }}
       />
 
-      <Button className="w-full bg-sky-500 text-white hover:bg-sky-700" onClick={handleSubmit}>
+      <Button
+        className="w-full bg-sky-500 text-white hover:bg-sky-700"
+        onClick={handleSubmit}
+      >
         Update
       </Button>
     </div>

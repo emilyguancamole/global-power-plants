@@ -21,7 +21,7 @@ type CountryGenerationChartProps = {
 
 const CountryGenerationChart = ({
   selectedCountries,
-  generationData
+  generationData,
 }: CountryGenerationChartProps) => {
   const [chartData, setChartData] = useState<GenerationChartDataPoint[]>([]);
 
@@ -35,9 +35,8 @@ const CountryGenerationChart = ({
     for (const code of countriesToShow) {
       filteredData[code] = generationData[code] || [];
     }
-      const formattedData = formatGenerationData(generationData); //* [ {2010, USA:200, CAN: 100}, {2011, ...}... ]
-      setChartData(formattedData);
-
+    const formattedData = formatGenerationData(generationData); //* [ {2010, USA:200, CAN: 100}, {2011, ...}... ]
+    setChartData(formattedData);
   }, [selectedCountries, generationData]);
 
   return (
@@ -78,7 +77,7 @@ const CountryGenerationChart = ({
 function formatGenerationData(
   dataObj: Record<string, GenerationOverTimeType[]>,
 ): GenerationChartDataPoint[] {
-  const yearToGenData: Record<number, GenerationChartDataPoint> = {}; 
+  const yearToGenData: Record<number, GenerationChartDataPoint> = {};
   Object.entries(dataObj).forEach(([code, data]) => {
     data.forEach(({ year, yearly_generation }) => {
       if (!yearToGenData[year]) {
@@ -87,7 +86,7 @@ function formatGenerationData(
       yearToGenData[year][code] = yearly_generation ?? null; // add generation data for the country to the year entry
     });
   });
-  return Object.values(yearToGenData).sort((a, b) => a.year - b.year); 
+  return Object.values(yearToGenData).sort((a, b) => a.year - b.year);
 }
 
 export default CountryGenerationChart;
