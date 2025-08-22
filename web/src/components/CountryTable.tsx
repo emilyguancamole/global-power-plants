@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { fetchTop25 } from "../data/api";
 import Box from "@mui/material/Box";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import type { CountryCapacityType } from "../data/types";

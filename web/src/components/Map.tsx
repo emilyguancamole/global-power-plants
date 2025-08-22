@@ -110,7 +110,7 @@ function PlantsLayer({ plants }: { plants: PlantType[] }) {
     const layer = L.geoJSON(geojsonData, {
       pointToLayer: (feature, latlng) =>
         L.circleMarker(latlng, {
-          radius: Math.max(2, Math.sqrt(feature.properties.capacity_mw/100)), // min radius 2
+          radius: Math.max(2, Math.sqrt(feature.properties.capacity_mw)/100), // min radius 2
           color: FUEL_COLORS[feature.properties.fuel] || "gray",
           fillOpacity: 0.7,
           stroke: false,

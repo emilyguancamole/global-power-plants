@@ -189,7 +189,7 @@ const UpdateForm = ({
         }}
       />
 
-      <Button className="w-full bg-sky-200 text-black hover:bg-sky-700" onClick={handleSubmit}>
+      <Button className="w-full bg-sky-500 text-white hover:bg-sky-700" onClick={handleSubmit}>
         Update
       </Button>
     </div>

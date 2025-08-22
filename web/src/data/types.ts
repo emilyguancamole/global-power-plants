@@ -24,7 +24,7 @@ export interface GenerationOverTimeType {
 }
 
 export interface GenerationChartDataPoint {
-  //? 2020, USA: 321, CAN: 203
+  //* 2020, USA: 321, CAN: 203
   year: number;
   [country_code: string]: number | null;
 }
@@ -36,7 +36,7 @@ export interface FuelShareType {
 
 export const FUEL_COLORS: Record<string, string> = {
   Solar: "#f5da2a",
-  Wind: "#6997d4ff",
+  Wind: "#7ca9e3ff",
   Hydro: "#088bb3ff",
   Gas: "#42d57dff",
   Oil: "brown",

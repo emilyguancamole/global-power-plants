@@ -33,7 +33,6 @@ function App() {
     setTop25Data(data);
   }, []);
 
-  // const { countries } = useGetCountries();
   const refetchGenerationData = useCallback(async (countries: string[]) => {
     const newData: Record<string, GenerationOverTimeType[]> = {};
     for (const code of countries) {

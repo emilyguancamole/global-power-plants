@@ -65,8 +65,9 @@ const CountryGenerationChart = ({
             key={code}
             type="monotone"
             dataKey={code}
-            stroke={idx === 0 ? "#84d0d8ff" : "#2eba0fff"}
+            stroke={idx === 0 ? "#088bb3ff" : "#29ae0bff"}
             dot={false}
+            strokeWidth={2}
           />
         ))}
       </LineChart>
