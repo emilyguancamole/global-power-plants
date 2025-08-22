@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Container, Typography, Box } from "@mui/material";
 import Map from "@/components/Map";
 import CountryTable from "@/components/CountryTable";
@@ -7,29 +7,14 @@ import SelectCountries from "@/components/SelectCountries";
 import CountryGenerationChart from "@/components/CountryGenerationChart";
 import FuelPieChart from "@/components/FuelPieChart";
 import UpdateForm from "@/components/UpdateForm";
-
-/*
-Note on grid positioning:
-  gridColumn Values:
-  '1' = occupies column 1 only
-  '1 / 2' = starts at line 1, ends at line 2 (occupies column 1)
-  '2 / 3' = starts at line 2, ends at line 3 (occupies column 2)
-  '1 / -1' = spans from first to last column (full width)
-  gridRow Values:
-  '1' = occupies row 1
-  '2' = occupies row 2
-  '1 / 3' = spans rows 1 and 2
-*/
+import { fetchGenerationOverTime, fetchTop25 } from "./data/api";
+import type { CountryCapacityType, GenerationOverTimeType } from "@/data/types";
 
 //todo: theme
 
 function App() {
-  // const [tabIndex, setTabIndex] = useState<number>(0);
-
   // countries to display in generation chart
-  const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<
-    string[]
-  >([]);
+  const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<string[]>([]);
   // for update form
   const [updateType, setUpdateType] = useState<
     "capacity" | "generation" | null
@@ -38,6 +23,38 @@ function App() {
   const [updateYear, setUpdateYear] = useState<number | null>(null); // for generation data only
   const [updateValue, setUpdateValue] = useState<number | null>(null);
 
+  // Fetching and state for generation chart & capacity table data lifted up for auto updates after updates to update form
+  const [top25Data, setTop25Data] = useState<CountryCapacityType[]>([]); //todo type
+  const [generationData, setGenerationData] = useState<Record<string, GenerationOverTimeType[]>>({}); // {countrycode -> gen data}
+
+  //* useCallback: memoize the functions and prevent unnecessary re-renders of child components
+  const refetchTop25Data = useCallback(async () => {
+    const data = await fetchTop25();
+    setTop25Data(data);
+  }, []);
+
+  // const { countries } = useGetCountries();
+  const refetchGenerationData = useCallback(async (countries: string[]) => {
+    const newData: Record<string, GenerationOverTimeType[]> = {};
+    for (const code of countries) {
+      newData[code] = await fetchGenerationOverTime(code);
+    }
+    setGenerationData(newData);
+  }, []);
+     
+  // Initial fetches
+  useEffect(() => {
+    refetchTop25Data();
+  }, [refetchTop25Data]); //* call when refetchTop25Data function reference changes (ie when refetchTop25Data's dependencies change, ie never since it has no dependencies)
+  //* React best practice: include all referenced vars/funcs in dependency array in case you change their dependencies
+
+  useEffect(() => {
+    if (selectedDisplayCountries.length > 0) {
+      refetchGenerationData(selectedDisplayCountries);
+    }
+  }, [selectedDisplayCountries, refetchGenerationData]); //* call when selected countries changes
+
+  // Main dashboard content
   const dashboardContent = (
     <div>
       {/* Row 1 */}
@@ -47,7 +64,7 @@ function App() {
           gridTemplateColumns: { xs: "1fr", lg: "70% 30%" },
           gridTemplateRows: { xs: "auto", lg: "500px" }, // 2 rows, set responsive height
           gap: 1, // spacing between grid items
-          mb: 4, // margin bottom
+          mb: 2, // margin bottom
         }}
       >
         {/* Map */}
@@ -56,11 +73,11 @@ function App() {
             display: "flex", // flexcolumn
             flexDirection: "column",
             height: "100%",
-            minHeight: 0, // let it shrink
+            minHeight: 300,
             boxShadow: 1,
             borderRadius: 1,
             p: 2,
-            overflow: "hidden", //? auto for scroll?
+            overflow: "hidden", 
           }}
         >
           <Typography variant="h5" gutterBottom>
@@ -75,7 +92,7 @@ function App() {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            minHeight: 0,
+            minHeight: 350,
             gridColumn: { xs: "1", lg: "2 " },
             boxShadow: 1,
             borderRadius: 1,
@@ -93,9 +110,9 @@ function App() {
       <Box
         sx={{
           display: "grid",
-          gap: 1,
-          gridTemplateColumns: { xs: "1fr", lg: "40% 60%" },
+          gridTemplateColumns: { xs: "1fr", lg: "35% 40% 25%" },
           gridTemplateRows: { xs: "auto", lg: "500px" },
+          gap: 1,
           mb: 4,
         }}
       >
@@ -115,7 +132,7 @@ function App() {
           <Typography variant="h5" gutterBottom>
             Top 25 Countries by Capacity
           </Typography>
-          <CountryTable />
+          <CountryTable data={top25Data}/>
         </Box>
         {/* Generation Chart */}
         <Box
@@ -123,8 +140,8 @@ function App() {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            minHeight: 0,
-            gridColumn: { xs: "1", lg: "2 / 3" },
+            minHeight: 300,
+            gridColumn: { xs: "1", lg: "2" },
             boxShadow: 1,
             borderRadius: 1,
             p: 2,
@@ -141,21 +158,54 @@ function App() {
           </Box>
           <CountryGenerationChart
             selectedCountries={selectedDisplayCountries}
+            generationData={generationData}
           />
         </Box>
+        
+        {/* Edit form */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            minHeight: 300,
+            gridColumn: { xs: "1", lg: "3" },
+            boxShadow: 1,
+            borderRadius: 1,
+            p: 2,
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Update Country Data
+          </Typography>
+          <UpdateForm
+            updateType={updateType}
+            setUpdateType={setUpdateType}
+            selectedUpdateCountry={selectedUpdateCountry!} // non-null assertion operator
+            setSelectedUpdateCountry={setSelectedUpdateCountry}
+            updateYear={updateYear!}
+            setUpdateYear={setUpdateYear}
+            updateValue={updateValue!}
+            setUpdateValue={setUpdateValue}
+            onDataUpdated={() => {
+              refetchTop25Data();
+              refetchGenerationData(selectedDisplayCountries);
+            }}
+          />
+        </Box>
+        
       </Box>
 
       {/* Row 3 */}
-      <Box
+      {/* <Box
         sx={{
           display: "grid",
           gap: 1,
           // gridTemplateColumns: { xs: '1fr', lg: '40% 60%' },
-          gridTemplateRows: { xs: "auto", lg: "500px" },
+          gridTemplateRows: { xs: "auto", lg: "200px" },
           mb: 4,
         }}
       >
-        {/* Edit form */}
         <UpdateForm
           updateType={updateType}
           setUpdateType={setUpdateType}
@@ -166,7 +216,7 @@ function App() {
           updateValue={updateValue!}
           setUpdateValue={setUpdateValue}
         />
-      </Box>
+      </Box> */}
     </div>
   );
 
@@ -181,3 +231,18 @@ function App() {
   );
 }
 export default App;
+
+
+
+/*
+Note on grid positioning:
+  gridColumn Values:
+  '1' = occupies column 1 only
+  '1 / 2' = starts at line 1, ends at line 2 (occupies column 1)
+  '2 / 3' = starts at line 2, ends at line 3 (occupies column 2)
+  '1 / -1' = spans from first to last column (full width)
+  gridRow Values:
+  '1' = occupies row 1
+  '2' = occupies row 2
+  '1 / 3' = spans rows 1 and 2
+*/

@@ -7,8 +7,8 @@ load_dotenv() # api/.env
 DB_NAME = "global_power_plants"
 DB_USER = "postgres"
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST") # "localhost" for local machine; "db" for potgres in docker
-DB_PORT = os.getenv("DB_PORT") #should be "5433"; this is the port on the HOST machine on which the db runs
+DB_HOST = os.getenv("DB_HOST") #! "localhost" for local machine; "db" for potgres in docker
+DB_PORT = os.getenv("DB_PORT") #! "5433"; this is the port on the HOST machine on which the db runs
 CSV_FILE = "./globalpowerplantdatabase/global_power_plant_database.csv"
 
 '''

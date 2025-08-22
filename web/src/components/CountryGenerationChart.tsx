@@ -22,10 +22,12 @@ import {
 
 type CountryGenerationChartProps = {
   selectedCountries: string[] | null;
+  generationData: Record<string, GenerationOverTimeType[]>;
 };
 
 const CountryGenerationChart = ({
   selectedCountries,
+  generationData
 }: CountryGenerationChartProps) => {
   const [chartData, setChartData] = useState<GenerationChartDataPoint[]>([]);
 
@@ -35,23 +37,29 @@ const CountryGenerationChart = ({
       : ["USA", "CAN"];
 
   useEffect(() => {
-    const dataObj: Record<string, GenerationOverTimeType[]> = {}; //* countrycode->[{2003,year_gen}, {2004,year_gen}, ...]
-    const fetchAll = async () => {
-      for (const code of countriesToShow) {
-        //* "of" to loop thru values
-        try {
-          const data = await fetchGenerationOverTime(code);
-          dataObj[code] = data;
-        } catch (err) {
-          console.log(`Error fetching country gen data for ${code}: ${err}`);
-          dataObj[code] = [];
-        }
-      }
-      const formattedData = formatGenerationData(dataObj); //* [ {2010, USA:200, CAN: 100}, {2011, ...}... ]
+    // const dataObj: Record<string, GenerationOverTimeType[]> = {}; //* countrycode->[{2003,year_gen}, {2004,year_gen}, ...]
+    // const fetchAll = async () => {
+    //   for (const code of countriesToShow) {
+    //     //* "of" to loop thru values
+    //     try {
+    //       const data = await fetchGenerationOverTime(code);
+    //       dataObj[code] = data;
+    //     } catch (err) {
+    //       console.log(`Error fetching country gen data for ${code}: ${err}`);
+    //       dataObj[code] = [];
+    //     }
+    //   }
+    // find data for selected countries
+    const filteredData: Record<string, GenerationOverTimeType[]> = {};
+    for (const code of countriesToShow) {
+      filteredData[code] = generationData[code] || [];
+    }
+      const formattedData = formatGenerationData(generationData); //* [ {2010, USA:200, CAN: 100}, {2011, ...}... ]
       setChartData(formattedData);
-    };
-    fetchAll();
-  }, [selectedCountries]);
+    // };
+    // fetchAll();
+
+  }, [selectedCountries, generationData]);
 
   return (
     <ResponsiveContainer width="100%" height="100%">

@@ -4,25 +4,33 @@ import Box from "@mui/material/Box";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import type { CountryCapacityType } from "../data/types";
 
-const CountryTable = () => {
-  const [countries, setCountries] = useState<CountryCapacityType[]>([]);
+type CountryTableProps = {
+  data: CountryCapacityType[];
+};
 
-  useEffect(() => {
-    fetchTop25()
-      .then((data: CountryCapacityType[]) => {
-        if (Array.isArray(data)) {
-          setCountries(data);
-        } else {
-          setCountries([]);
-          console.error("Fetched data is not an array:", data);
-        }
-      })
-      .catch((error) => console.error("Error fetching top countries:", error));
-  }, []);
+const CountryTable = ({ data }: CountryTableProps) => {
+  // const [countries, setCountries] = useState<CountryCapacityType[]>([]);
+  // useEffect(() => {
+  //   fetchTop25()
+  //     .then((data: CountryCapacityType[]) => {
+  //       if (Array.isArray(data)) {
+  //         setCountries(data);
+  //       } else {
+  //         setCountries([]);
+  //         console.error("Fetched data is not an array:", data);
+  //       }
+  //     })
+  //     .catch((error) => console.error("Error fetching top countries:", error));
+  // }, []);
 
+  // const rows = countries.map((country, index) => ({
+  //   // assign an index to each `country` item
+  //   id: index,
+  //   ...country,
+  // }));
+  
   // Datagrid row: key-value pairs that correspond to the column and its value
-  const rows = countries.map((country, index) => ({
-    // assign an index to each `country` item
+  const rows = data.map((country, index) => ({
     id: index,
     ...country,
   }));
@@ -36,13 +44,12 @@ const CountryTable = () => {
       type: "number",
       valueGetter: (_, row) => {
         return (
-          countries.findIndex(
+          data.findIndex(
             (country) => country.country_code === row.country_code,
           ) + 1
         );
       },
     },
-    // { field: "country_code", headerName: "Code", width: 100 },
     { field: "country_name", headerName: "Country", width: 180 },
     {
       field: "tot_capacity",

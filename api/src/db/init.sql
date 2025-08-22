@@ -55,18 +55,3 @@ CREATE TABLE country_generation_overrides (
     updated_at TIMESTAMP DEFAULT now(),
     UNIQUE(country_code, year)
 );
-
--- COALESCE() returns first non-null among its arguments
-
--- NOT YET BUT MAYBE LATER:
---CREATE TABLE fuel_types (
- --   id SERIAL PRIMARY KEY,
-   -- fuel_type TEXT UNIQUE NOT NULL,
-    --category TEXT NOT NULL,  -- 'renewable', 'fossil', 'nuclear', 'other'
-    --is_renewable BOOLEAN DEFAULT FALSE,
---);
-
--- Helpful indexes
--- CREATE INDEX idx_power_plants_country_code ON power_plants(country_code);
--- CREATE INDEX idx_generation_year ON generation_data(year);
--- CREATE INDEX idx_gen_country_year ON generation_data(year, gppd_idnr);

@@ -12,9 +12,9 @@ router.get("/", async (req, res) => {
             ORDER BY country_name;
         `);
         res.json(result.rows);
-    } catch (err) {
+    } catch (err: any) {
         console.error(err);
-        res.status(500).json({ error: "Database error" });
+        res.status(500).json({ error: err.message });
     }
 });
 
@@ -45,9 +45,9 @@ router.get('/top25', async (req, res) => {
         );
     
         res.json(result.rows) // sends as json
-    } catch (err) {
+    } catch (err: any) {
         console.error(err)
-        res.status(500).json({ error: 'Database error' }); 
+        res.status(500).json({ error: err }); 
     }
 });
 
@@ -57,13 +57,17 @@ router.get('/:code/generation-over-time', async (req, res) => {
     try {
         const result = await db.query(
             `SELECT g.year,
-                SUM(COALESCE(generation_gwh, estimated_generation_gwh)) AS yearly_generation
+                COALESCE(co.generation_override_gwh, 
+                    SUM(generation_gwh), 
+                    SUM(estimated_generation_gwh)) AS yearly_generation
             FROM generation_data g
             JOIN power_plants p
                 ON g.gppd_idnr = p.gppd_idnr
+            LEFT JOIN country_generation_overrides co
+                ON p.country_code = co.country_code AND g.year = co.year
             WHERE p.country_code = $1
-            GROUP BY g.year
-            ORDER BY g.year`,
+            GROUP BY g.year, co.generation_override_gwh
+            ORDER BY g.year;`,
             [code.toUpperCase()]
         );
         if (result.rows.length === 0) {
@@ -78,29 +82,16 @@ router.get('/:code/generation-over-time', async (req, res) => {
 
 
 //todo Update feature: edit country's capacity_mw
-router.patch('/:code/capacity-mw', async (req, res) => {
+router.put('/:code/capacity-mw', async (req, res) => {
     const { code } = req.params;
     const { capacity } = req.body;
 
     // capacity = null means remove override
-    if (capacity !== null && (capacity === undefined || typeof capacity !== 'number' || capacity < 0)) {
-        return res.status(400).json({ error: "Capacity must be a non-negative number or null" });
+    if (capacity === null || typeof capacity !== 'number' || capacity < 0) {
+        return res.status(400).json({ error: "Capacity must be a non-negative number" });
     }
 
     try {
-        if (capacity === null) { // remove the override
-            const deleted = await db.query(
-                `DELETE FROM country_capacity_overrides
-                WHERE country_code = $1
-                RETURNING country_code;`,
-                [code.toUpperCase()]
-            );
-            if (deleted.rows.length === 0) {
-                return res.status(404).json({ error: `No override found for country code ${code}` });
-            }
-            return res.json({ message: `Override removed for ${code.toUpperCase()}` });
-        }
-        
         // Upsert the override //* upset: INSERT ... ON CONFLICT DO UPDATE
         const result = await db.query(
             `INSERT INTO country_capacity_overrides (country_code, capacity_override_mw)
@@ -125,8 +116,8 @@ router.put('/:code/generation-gwh/:year', async (req, res) => {
     const { code, year } = req.params;
     const { generationData } = req.body;
     // Input validation
-    if (generationData !== null && (generationData === undefined || typeof generationData !== 'number' || generationData < 0)) {
-        return res.status(400).json({ error: "Generation (gwh) value must be a non-negative number or null" });
+    if (generationData === null || typeof generationData !== 'number' || generationData < 0) {
+        return res.status(400).json({ error: "Generation (gwh) value must be a non-negative number" });
     }
     const yearInt = parseInt(year, 10);
     if (Number.isNaN(yearInt)) {
@@ -134,22 +125,7 @@ router.put('/:code/generation-gwh/:year', async (req, res) => {
     }
 
     try {
-        // If client sends null, remove the override
-        //todo check
-        if (generationData === null) {
-            const deleted = await db.query(
-                `DELETE FROM country_generation_overrides
-                 WHERE country_code = $1 AND year = $2
-                 RETURNING country_code, year;`,
-                [code.toUpperCase(), yearInt]
-            );
-            if (deleted.rows.length === 0) {
-                return res.status(404).json({ error: `No generation override found for ${code.toUpperCase()} year ${yearInt}` });
-            }
-            return res.json({ message: `Generation override removed for ${code.toUpperCase()} year ${yearInt}` });
-        }
-        
-        // Upsert overrid
+        // Upsert override
         const result = await db.query(
             `INSERT INTO country_generation_overrides (country_code, year, generation_override_gwh)
             VALUES ($1, $2, $3)
@@ -161,6 +137,7 @@ router.put('/:code/generation-gwh/:year', async (req, res) => {
         );
 
         return res.json(result.rows[0]);
+        
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: `Error editing generation data for country ${code}, year ${year}` });

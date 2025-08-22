@@ -34,6 +34,7 @@ type UpdateFormProps = {
   setUpdateYear: (year: number | null) => void;
   updateValue: number | null;
   setUpdateValue: (updateValue: number | null) => void;
+  onDataUpdated: () => void // called after update
 };
 const UpdateForm = ({
   updateType,
@@ -44,6 +45,7 @@ const UpdateForm = ({
   setUpdateYear,
   updateValue,
   setUpdateValue,
+  onDataUpdated,
 }: UpdateFormProps) => {
     const [countryData, setCountryData] = useState<CountryDataType[]>([]);
     const [showList, setShowList] = useState(false);
@@ -54,7 +56,7 @@ const UpdateForm = ({
       });
     }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // validate inputs
     if (!selectedUpdateCountry) {
       alert("Please select a country to update."); // simple alert for now
@@ -74,18 +76,25 @@ const UpdateForm = ({
       return;
     }
     // call API
-    if (updateType === "capacity") {
-      editCountryCapacity(selectedUpdateCountry, updateValue);
+    try {
+        if (updateType === "capacity") {
+      await editCountryCapacity(selectedUpdateCountry, updateValue);
     } else if (updateType === "generation") {
-      editCountryYearlyGeneration(
+      await editCountryYearlyGeneration(
         selectedUpdateCountry,
         updateYear,
         updateValue,
       );
     }
+    onDataUpdated();
+    // Reset form
     setUpdateType(null);
     setSelectedUpdateCountry("");
     setUpdateYear(null);
+    setUpdateValue(null);
+    } catch(err) {
+        alert("Update failed");
+    }
   };
 
   const toggleCountry = (code: string) => {
@@ -97,7 +106,7 @@ const UpdateForm = ({
   };
 
   return (
-    <div className="p-4 rounded-2xl shadow-md border space-y-4 max-w-md">
+    <div className="p-4 space-y-2">
       {/* Update type - cast as capacity or generation*/}
       {/* <Label className="px-1 text-sm font-medium p-0">
                 Select up to 2 countries to display
@@ -174,7 +183,7 @@ const UpdateForm = ({
       {/* New data */}
       <Input
         type="number"
-        placeholder="New value (must be a number)"
+        placeholder="New value (number)"
         value={updateValue ?? ""}
         onChange={(e) => {
           const val = e.target.value;
