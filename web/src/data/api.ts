@@ -1,4 +1,4 @@
-import { API_URL } from "../env";
+import { API_URL, API_KEY } from "../env";
 import type {
   PlantType,
   CountryCapacityType,
@@ -6,10 +6,12 @@ import type {
   GenerationOverTimeType,
 } from "./types";
 
-// import axios from "axios"; //todo maybe later
-
 export const fetchPlants = async (): Promise<PlantType[]> => {
-  const response = await fetch(`${API_URL}/plants/coordinates`);
+  const response = await fetch(`${API_URL}/plants/coordinates`, {
+    headers: {
+      "x-api-key": API_KEY,
+    },
+  });
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
@@ -17,7 +19,11 @@ export const fetchPlants = async (): Promise<PlantType[]> => {
 };
 
 export const fetchCountries = async (): Promise<CountryDataType[]> => {
-  const response = await fetch(`${API_URL}/countries`);
+  const response = await fetch(`${API_URL}/countries`, {
+    headers: {
+      "x-api-key": API_KEY,
+    },
+  });
   // console.log("Raw response:", response);
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
@@ -26,7 +32,11 @@ export const fetchCountries = async (): Promise<CountryDataType[]> => {
 };
 
 export const fetchTop25 = async (): Promise<CountryCapacityType[]> => {
-  const response = await fetch(`${API_URL}/countries/top25`);
+  const response = await fetch(`${API_URL}/countries/top25`, {
+    headers: {
+      "x-api-key": API_KEY,
+    },
+  });
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
@@ -36,9 +46,11 @@ export const fetchTop25 = async (): Promise<CountryCapacityType[]> => {
 export const fetchGenerationOverTime = async (
   code: string,
 ): Promise<GenerationOverTimeType[]> => {
-  const response = await fetch(
-    `${API_URL}/countries/${code}/generation-over-time`,
-  );
+  const response = await fetch(`${API_URL}/countries/${code}/generation-over-time`, {
+      headers: {
+      "x-api-key": API_KEY,
+    },
+  });
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
@@ -46,7 +58,11 @@ export const fetchGenerationOverTime = async (
 };
 
 export const fetchFuelShare = async () => {
-  const response = await fetch(`${API_URL}/plants/fuel-share`);
+  const response = await fetch(`${API_URL}/plants/fuel-share`, {
+    headers: {
+      "x-api-key": API_KEY,
+    },
+  });
   if (!response.ok) {
     throw new Error(`API request failed with status: ${response.status}`);
   }
@@ -56,7 +72,10 @@ export const fetchFuelShare = async () => {
 export const editCountryCapacity = async (code: string, capacity: number) => {
   const response = await fetch(`${API_URL}/countries/${code}/capacity-mw`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
     body: JSON.stringify({ capacity }), // request body as JSON
   });
   if (!response.ok) {
@@ -74,7 +93,10 @@ export const editCountryYearlyGeneration = async (
     `${API_URL}/countries/${code}/generation-gwh/${year}`,
     {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
       body: JSON.stringify({ generationData }),
     },
   );

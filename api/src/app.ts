@@ -19,10 +19,9 @@ app.use(cors({
 
 app.use(express.json());
 
-// app.use(apiKeyAuth); //todo apply auth to all routes
+app.use(apiKeyAuth); // apply auth to all routes
 
 // Route mounting
-// app.use('/test', testRouter);
 app.use('/plants', plantsRouter);
 app.use('/countries', countriesRouter);
 

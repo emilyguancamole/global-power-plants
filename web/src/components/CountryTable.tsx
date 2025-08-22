@@ -9,26 +9,6 @@ type CountryTableProps = {
 };
 
 const CountryTable = ({ data }: CountryTableProps) => {
-  // const [countries, setCountries] = useState<CountryCapacityType[]>([]);
-  // useEffect(() => {
-  //   fetchTop25()
-  //     .then((data: CountryCapacityType[]) => {
-  //       if (Array.isArray(data)) {
-  //         setCountries(data);
-  //       } else {
-  //         setCountries([]);
-  //         console.error("Fetched data is not an array:", data);
-  //       }
-  //     })
-  //     .catch((error) => console.error("Error fetching top countries:", error));
-  // }, []);
-
-  // const rows = countries.map((country, index) => ({
-  //   // assign an index to each `country` item
-  //   id: index,
-  //   ...country,
-  // }));
-  
   // Datagrid row: key-value pairs that correspond to the column and its value
   const rows = data.map((country, index) => ({
     id: index,
@@ -40,8 +20,10 @@ const CountryTable = ({ data }: CountryTableProps) => {
     {
       field: "rank",
       headerName: "Rank",
-      width: 40,
+      width: 37,
       type: "number",
+      align: "left",
+      headerAlign: "left",
       valueGetter: (_, row) => {
         return (
           data.findIndex(
@@ -50,12 +32,20 @@ const CountryTable = ({ data }: CountryTableProps) => {
         );
       },
     },
-    { field: "country_name", headerName: "Country", width: 180 },
+    { 
+      field: "country_name", 
+      headerName: "Country", 
+      width: 175,
+      align: "left",
+      headerAlign: "left",
+    },
     {
       field: "tot_capacity",
       headerName: "Capacity (MW)",
       type: "number",
-      width: 130,
+      align: "left",
+      headerAlign: "left",
+      width: 110,
       valueFormatter: (val: number) => {
         return Math.round(val).toString();
       },
@@ -65,7 +55,7 @@ const CountryTable = ({ data }: CountryTableProps) => {
   return (
     <Box
       sx={{
-        height: "95%",
+        height: "93%",
         width: "100%",
         "& .MuiDataGrid-row:nth-of-type(even)": {
           backgroundColor: "#f5f5f5", // stripes: gray for even rows
@@ -81,6 +71,7 @@ const CountryTable = ({ data }: CountryTableProps) => {
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? "even-row" : "odd-row"
         }
+        hideFooter
       />
     </Box>
   );

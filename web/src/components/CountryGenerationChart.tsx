@@ -1,14 +1,8 @@
-//  Create a line chart that shows the annual
-// electricity generation for one or more selected countries based on the available
-// dataset. The chart should automatically update whenever the selected country or
-// countries change. Users must be able to select up to two countries for comparison.
-
 import { useEffect, useState } from "react";
 import type {
   GenerationOverTimeType,
   GenerationChartDataPoint,
 } from "@/data/types";
-import { fetchGenerationOverTime } from "@/data/api";
 import {
   LineChart,
   Line,
@@ -37,27 +31,12 @@ const CountryGenerationChart = ({
       : ["USA", "CAN"];
 
   useEffect(() => {
-    // const dataObj: Record<string, GenerationOverTimeType[]> = {}; //* countrycode->[{2003,year_gen}, {2004,year_gen}, ...]
-    // const fetchAll = async () => {
-    //   for (const code of countriesToShow) {
-    //     //* "of" to loop thru values
-    //     try {
-    //       const data = await fetchGenerationOverTime(code);
-    //       dataObj[code] = data;
-    //     } catch (err) {
-    //       console.log(`Error fetching country gen data for ${code}: ${err}`);
-    //       dataObj[code] = [];
-    //     }
-    //   }
-    // find data for selected countries
     const filteredData: Record<string, GenerationOverTimeType[]> = {};
     for (const code of countriesToShow) {
       filteredData[code] = generationData[code] || [];
     }
       const formattedData = formatGenerationData(generationData); //* [ {2010, USA:200, CAN: 100}, {2011, ...}... ]
       setChartData(formattedData);
-    // };
-    // fetchAll();
 
   }, [selectedCountries, generationData]);
 
@@ -71,12 +50,12 @@ const CountryGenerationChart = ({
           tickFormatter={(value) =>
             value >= 1000 ? `${value / 1000}` : value.toString()
           } // changed unit from gwh to twh
-          // todo align label in center of yaxis
           label={{
             value: "Generation (TWh)",
             angle: -90,
             position: "insideLeft",
             fontSize: 12,
+            dy: 50,
           }}
         />
         <Tooltip />

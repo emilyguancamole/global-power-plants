@@ -66,7 +66,8 @@ const UpdateForm = ({
       updateType === "generation" &&
       (!updateYear ||
         updateYear < 1900 ||
-        updateYear > new Date().getFullYear())
+        updateYear > new Date().getFullYear() ||
+        updateYear > 2019) // hard coded max year for now
     ) {
       alert("Please enter a valid year.");
       return;
@@ -78,20 +79,20 @@ const UpdateForm = ({
     // call API
     try {
         if (updateType === "capacity") {
-      await editCountryCapacity(selectedUpdateCountry, updateValue);
-    } else if (updateType === "generation") {
-      await editCountryYearlyGeneration(
-        selectedUpdateCountry,
-        updateYear,
-        updateValue,
-      );
-    }
-    onDataUpdated();
-    // Reset form
-    setUpdateType(null);
-    setSelectedUpdateCountry("");
-    setUpdateYear(null);
-    setUpdateValue(null);
+            await editCountryCapacity(selectedUpdateCountry, updateValue);
+        } else if (updateType === "generation") {
+            await editCountryYearlyGeneration(
+                selectedUpdateCountry,
+                updateYear,
+                updateValue,
+            );
+        }
+        onDataUpdated();
+        // Reset form
+        setUpdateType(null);
+        setSelectedUpdateCountry("");
+        setUpdateYear(null);
+        setUpdateValue(null);
     } catch(err) {
         alert("Update failed");
     }
@@ -106,11 +107,8 @@ const UpdateForm = ({
   };
 
   return (
-    <div className="p-4 space-y-2">
+    <div className="mt-4 p-2 space-y-4">
       {/* Update type - cast as capacity or generation*/}
-      {/* <Label className="px-1 text-sm font-medium p-0">
-                Select up to 2 countries to display
-            </Label> */}
       <Select
         onValueChange={(val) => setUpdateType(val as "capacity" | "generation")}
         value={updateType ?? ""} //note value prop tells Select which item is selected
@@ -130,7 +128,7 @@ const UpdateForm = ({
           <Button
             variant="outline"
             role="combobox"
-            className="w-full justify-between"
+            className="w-full justify-between p-3 text-gray-500"
           >
             {selectedUpdateCountry
               ? `Country: ${selectedUpdateCountry}`
@@ -191,7 +189,7 @@ const UpdateForm = ({
         }}
       />
 
-      <Button className="w-full" onClick={handleSubmit}>
+      <Button className="w-full bg-sky-200 text-black hover:bg-sky-700" onClick={handleSubmit}>
         Update
       </Button>
     </div>

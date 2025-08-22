@@ -14,7 +14,7 @@ import type { CountryCapacityType, GenerationOverTimeType } from "@/data/types";
 
 function App() {
   // countries to display in generation chart
-  const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<string[]>([]);
+  const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<string[]>(["USA", "CAN"]);
   // for update form
   const [updateType, setUpdateType] = useState<
     "capacity" | "generation" | null
@@ -24,7 +24,7 @@ function App() {
   const [updateValue, setUpdateValue] = useState<number | null>(null);
 
   // Fetching and state for generation chart & capacity table data lifted up for auto updates after updates to update form
-  const [top25Data, setTop25Data] = useState<CountryCapacityType[]>([]); //todo type
+  const [top25Data, setTop25Data] = useState<CountryCapacityType[]>([]); 
   const [generationData, setGenerationData] = useState<Record<string, GenerationOverTimeType[]>>({}); // {countrycode -> gen data}
 
   //* useCallback: memoize the functions and prevent unnecessary re-renders of child components
@@ -70,7 +70,7 @@ function App() {
         {/* Map */}
         <Box
           sx={{
-            display: "flex", // flexcolumn
+            display: "flex",
             flexDirection: "column",
             height: "100%",
             minHeight: 300,
@@ -110,7 +110,7 @@ function App() {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "35% 40% 25%" },
+          gridTemplateColumns: { xs: "1fr", lg: "32% 46% 22%" },
           gridTemplateRows: { xs: "auto", lg: "500px" },
           gap: 1,
           mb: 4,
@@ -122,7 +122,7 @@ function App() {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            minHeight: 0,
+            minHeight: 100,
             boxShadow: 1,
             borderRadius: 1,
             p: 2,
@@ -187,43 +187,20 @@ function App() {
             setUpdateYear={setUpdateYear}
             updateValue={updateValue!}
             setUpdateValue={setUpdateValue}
-            onDataUpdated={() => {
+            onDataUpdated={() => { // callback after data updated, refresh data/update state in App
               refetchTop25Data();
               refetchGenerationData(selectedDisplayCountries);
             }}
           />
         </Box>
-        
       </Box>
-
-      {/* Row 3 */}
-      {/* <Box
-        sx={{
-          display: "grid",
-          gap: 1,
-          // gridTemplateColumns: { xs: '1fr', lg: '40% 60%' },
-          gridTemplateRows: { xs: "auto", lg: "200px" },
-          mb: 4,
-        }}
-      >
-        <UpdateForm
-          updateType={updateType}
-          setUpdateType={setUpdateType}
-          selectedUpdateCountry={selectedUpdateCountry!} // non-null assertion operator
-          setSelectedUpdateCountry={setSelectedUpdateCountry}
-          updateYear={updateYear!}
-          setUpdateYear={setUpdateYear}
-          updateValue={updateValue!}
-          setUpdateValue={setUpdateValue}
-        />
-      </Box> */}
     </div>
   );
 
   return (
     <Container>
-      <Typography sx={{ mt: 4 }} variant="h3" align="center" gutterBottom>
-        Global Power Dashboard
+      <Typography sx={{ mt: 4 }} variant="h1" align="center" gutterBottom>
+        Global Power Plants Dashboard
       </Typography>
 
       <Box>{dashboardContent}</Box>
