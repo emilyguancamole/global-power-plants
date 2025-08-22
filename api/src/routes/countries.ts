@@ -80,8 +80,6 @@ router.get('/:code/generation-over-time', async (req, res) => {
     }
 })
 
-
-//todo Update feature: edit country's capacity_mw
 router.put('/:code/capacity-mw', async (req, res) => {
     const { code } = req.params;
     const { capacity } = req.body;
@@ -92,7 +90,7 @@ router.put('/:code/capacity-mw', async (req, res) => {
     }
 
     try {
-        // Upsert the override //* upset: INSERT ... ON CONFLICT DO UPDATE
+        // Upsert the override 
         const result = await db.query(
             `INSERT INTO country_capacity_overrides (country_code, capacity_override_mw)
             VALUES ($1, $2)

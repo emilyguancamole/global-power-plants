@@ -78,7 +78,7 @@ const CountryGenerationChart = ({
 function formatGenerationData(
   dataObj: Record<string, GenerationOverTimeType[]>,
 ): GenerationChartDataPoint[] {
-  const yearToGenData: Record<number, GenerationChartDataPoint> = {}; //* year: {year, USA: 200, CAN: 100}
+  const yearToGenData: Record<number, GenerationChartDataPoint> = {}; 
   Object.entries(dataObj).forEach(([code, data]) => {
     data.forEach(({ year, yearly_generation }) => {
       if (!yearToGenData[year]) {
@@ -87,7 +87,7 @@ function formatGenerationData(
       yearToGenData[year][code] = yearly_generation ?? null; // add generation data for the country to the year entry
     });
   });
-  return Object.values(yearToGenData).sort((a, b) => a.year - b.year); //* extract only the values (GenerationOverTime); sort by each object's year; smaller number first
+  return Object.values(yearToGenData).sort((a, b) => a.year - b.year); 
 }
 
 export default CountryGenerationChart;

@@ -2,7 +2,7 @@ import { Pool } from 'pg'; // connection pool so multiple API requests don’t c
 import dotenv from 'dotenv';
 dotenv.config();
 
-console.log('DB config:', { //!
+console.log('DB config:', {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   db: process.env.DB_NAME,

@@ -10,8 +10,6 @@ import UpdateForm from "@/components/UpdateForm";
 import { fetchGenerationOverTime, fetchTop25 } from "./data/api";
 import type { CountryCapacityType, GenerationOverTimeType } from "@/data/types";
 
-//todo: theme
-
 function App() {
   // countries to display in generation chart
   const [selectedDisplayCountries, setSelectedDisplayCountries] = useState<string[]>(["USA", "CAN"]);
@@ -27,7 +25,6 @@ function App() {
   const [top25Data, setTop25Data] = useState<CountryCapacityType[]>([]); 
   const [generationData, setGenerationData] = useState<Record<string, GenerationOverTimeType[]>>({}); // {countrycode -> gen data}
 
-  //* useCallback: memoize the functions and prevent unnecessary re-renders of child components
   const refetchTop25Data = useCallback(async () => {
     const data = await fetchTop25();
     setTop25Data(data);
@@ -44,8 +41,7 @@ function App() {
   // Initial fetches
   useEffect(() => {
     refetchTop25Data();
-  }, [refetchTop25Data]); //* call when refetchTop25Data function reference changes (ie when refetchTop25Data's dependencies change, ie never since it has no dependencies)
-  //* React best practice: include all referenced vars/funcs in dependency array in case you change their dependencies
+  }, [refetchTop25Data]); 
 
   useEffect(() => {
     if (selectedDisplayCountries.length > 0) {

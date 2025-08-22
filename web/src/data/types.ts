@@ -24,7 +24,6 @@ export interface GenerationOverTimeType {
 }
 
 export interface GenerationChartDataPoint {
-  //* 2020, USA: 321, CAN: 203
   year: number;
   [country_code: string]: number | null;
 }
