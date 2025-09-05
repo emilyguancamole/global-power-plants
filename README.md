@@ -55,7 +55,10 @@ Features:
 * Line Chart: Country's electricity generation trends (Recharts, with dynamic selection of up to 2 countries via Shadcn’s Command component)
 * Pie Chart: Global fuel type breakdown
 * Update Form: Shadcn form with validation to submit capacity or generation overrides
+
 The UI is responsive and will resize with device/screen size.
+
+Here's a screenshot of the full dashboard:
 
 <img width="800" height="732" alt="power_plants_dashboard" src="https://github.com/user-attachments/assets/d088ce37-a4bc-4d80-85c2-755698bfd720" />
 
