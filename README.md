@@ -34,7 +34,6 @@ DevOps / Infra
 ```
 
 ### Database Design
-
 Normalized relational schema with the following tables:
 * countries: country metadata
 * power_plants: individual plant info (capacity, fuel, country)
@@ -56,9 +55,9 @@ Features:
 * Line Chart: Country's electricity generation trends (Recharts, with dynamic selection of up to 2 countries via Shadcn’s Command component)
 * Pie Chart: Global fuel type breakdown
 * Update Form: Shadcn form with validation to submit capacity or generation overrides
+The UI is responsive and will resize with device/screen size.
 
-**Reference:** 
-Global Energy Observatory, Google, KTH Royal Institute of Technology in Stockholm, Enipedia, World Resources Institute. 2021. Global Power Plant Database version 1.3.0. Accessed through https://datasets.wri.org/datasets/global-power-plant-database.
+<img width="800" height="732" alt="power_plants_dashboard" src="https://github.com/user-attachments/assets/d088ce37-a4bc-4d80-85c2-755698bfd720" />
 
 ## To run locally
 
@@ -75,3 +74,13 @@ Global Energy Observatory, Google, KTH Royal Institute of Technology in Stockhol
 
 3. To run with Docker:
     - From the project root: `docker compose up --build -d`. This builds and starts the API server, web app, and Postgres database in separate containers. The application runs on `http://localhost:5173`.
+  
+## Future Improvements
+Add form validation with React Hook Form + Zod
+Better error handling (API + UI toast notifications)
+Migrate from local to global state management (using Redux or Nanostores) for scalability
+Add unit tests for API and frontend components
+Improve UI consistency by consolidating MUI + Shadcn theme systems
+
+## Reference
+Global Energy Observatory, Google, KTH Royal Institute of Technology in Stockholm, Enipedia, World Resources Institute. 2021. Global Power Plant Database version 1.3.0. Accessed through https://datasets.wri.org/datasets/global-power-plant-database.
