@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import plantsRouter from './routes/plants';
 import countriesRouter from './routes/countries';
-import testRouter from './routes/test';
 import { apiKeyAuth } from './middleware/api-key-auth';
 
 
